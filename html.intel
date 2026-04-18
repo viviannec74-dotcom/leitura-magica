@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leitura Mágica — App para Crianças com Dislexia</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --rosa:#FF6FB5; --roxo:#9B59B6; --azul:#4ECDC4;
+  --amarelo:#FFD93D; --laranja:#FF6B35; --verde:#6BCB77;
+  --escuro:#1a1a2e; --cinza:#f8f4ff;
+}
+body{font-family:'Nunito',sans-serif;background:white;color:#333;overflow-x:hidden;}
+
+/* HERO */
+.hero{
+  background:linear-gradient(135deg,#1a1a2e 0%,#2d1b69 50%,#1a1a2e 100%);
+  padding:60px 20px 80px; text-align:center; position:relative; overflow:hidden;
+}
+.hero::before{
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse at 30% 50%,rgba(155,89,182,.3),transparent 60%),
+             radial-gradient(ellipse at 70% 50%,rgba(78,205,196,.2),transparent 60%);
+}
+.hero-badge{
+  display:inline-block; background:rgba(255,215,61,.2);
+  border:2px solid var(--amarelo); border-radius:30px;
+  padding:8px 20px; color:var(--amarelo);
+  font-weight:800; font-size:.9rem; margin-bottom:24px;
+  letter-spacing:1px; text-transform:uppercase;
+  position:relative;
+}
+.hero h1{
+  font-family:'Fredoka One',cursive;
+  font-size:clamp(2.2rem,6vw,4.5rem);
+  color:white; line-height:1.15;
+  margin-bottom:18px; position:relative;
+}
+.hero h1 span{
+  background:linear-gradient(135deg,var(--amarelo),var(--rosa));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+}
+.hero-sub{
+  color:rgba(255,255,255,.85); font-size:clamp(1rem,2.5vw,1.3rem);
+  font-weight:700; max-width:600px; margin:0 auto 35px; position:relative;
+  line-height:1.7;
+}
+.hero-emojis{font-size:clamp(2.5rem,6vw,4rem);margin-bottom:20px;position:relative;display:block;}
+.cta-hero{
+  display:inline-block; background:linear-gradient(135deg,var(--amarelo),var(--laranja));
+  color:white; font-family:'Fredoka One',cursive; font-size:clamp(1.2rem,3vw,1.6rem);
+  padding:18px 45px; border-radius:50px; text-decoration:none;
+  box-shadow:0 8px 30px rgba(255,107,53,.5); position:relative;
+  transition:transform .3s,box-shadow .3s; border:none; cursor:pointer;
+}
+.cta-hero:hover{transform:translateY(-4px);box-shadow:0 15px 40px rgba(255,107,53,.6);}
+.hero-preco{color:rgba(255,255,255,.7);font-size:.9rem;margin-top:14px;position:relative;}
+.hero-preco strong{color:var(--amarelo);font-size:1.2rem;}
+
+/* FLOATERS */
+.floater{position:absolute;font-size:2rem;opacity:.15;animation:fl 6s ease-in-out infinite;}
+@keyframes fl{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-20px) rotate(5deg)}}
+
+/* SEÇÕES */
+section{padding:70px 20px;}
+.container{max-width:900px;margin:0 auto;}
+.section-badge{
+  display:inline-block; background:var(--cinza); border-radius:20px;
+  padding:6px 18px; font-weight:800; font-size:.8rem;
+  color:var(--roxo); letter-spacing:1px; text-transform:uppercase;
+  margin-bottom:14px;
+}
+.section-h{
+  font-family:'Fredoka One',cursive;
+  font-size:clamp(1.8rem,4vw,3rem); margin-bottom:14px;
+  line-height:1.2;
+}
+.section-p{font-size:1.05rem;color:#666;line-height:1.8;max-width:680px;}
+
+/* PROBLEMA */
+.problema{background:var(--cinza);}
+.dor-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;margin-top:35px;}
+.dor-card{
+  background:white; border-radius:20px; padding:22px;
+  border-left:5px solid var(--rosa);
+  box-shadow:0 4px 20px rgba(0,0,0,.05);
+}
+.dor-card .ic{font-size:2rem;margin-bottom:10px;}
+.dor-card p{font-weight:700;color:#555;line-height:1.6;font-size:.95rem;}
+
+/* SOLUÇÃO */
+.solucao-wrap{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;margin-top:40px;}
+@media(max-width:700px){.solucao-wrap{grid-template-columns:1fr;}}
+.mockup{
+  background:linear-gradient(135deg,var(--roxo),var(--azul));
+  border-radius:30px; padding:30px; text-align:center;
+  box-shadow:0 20px 60px rgba(155,89,182,.35);
+  position:relative; overflow:hidden;
+}
+.mockup::before{
+  content:''; position:absolute; top:-30px; right:-30px;
+  width:150px; height:150px; background:rgba(255,255,255,.08);
+  border-radius:50%;
+}
+.mockup-titulo{font-family:'Fredoka One';font-size:1.5rem;color:white;margin-bottom:6px;}
+.mockup-sub{color:rgba(255,255,255,.8);font-size:.9rem;margin-bottom:20px;}
+.mockup-emoji{font-size:5rem;margin:10px 0;display:block;}
+.modulos-lista{display:flex;flex-direction:column;gap:10px;}
+.modulo{
+  background:rgba(255,255,255,.15); border-radius:14px;
+  padding:10px 16px; color:white; font-weight:800;
+  display:flex; align-items:center; gap:10px; font-size:.9rem;
+  backdrop-filter:blur(10px);
+}
+
+/* BENEFÍCIOS */
+.beneficios{background:var(--escuro);}
+.ben-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-top:40px;}
+.ben-card{
+  background:rgba(255,255,255,.05); border-radius:22px; padding:28px;
+  border:1px solid rgba(255,255,255,.1); transition:transform .3s;
+}
+.ben-card:hover{transform:translateY(-6px);}
+.ben-ic{font-size:2.5rem;margin-bottom:14px;display:block;}
+.ben-h{font-family:'Fredoka One';font-size:1.3rem;color:white;margin-bottom:8px;}
+.ben-p{color:rgba(255,255,255,.65);font-size:.9rem;line-height:1.7;}
+
+/* O QUE ESTÁ INCLUÍDO */
+.incluido-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:35px;}
+.incl-item{
+  background:white; border-radius:20px; padding:22px;
+  border:3px solid #f0e8ff; text-align:center;
+  box-shadow:0 4px 20px rgba(0,0,0,.05);
+  transition:border-color .3s,transform .3s;
+}
+.incl-item:hover{border-color:var(--roxo);transform:translateY(-4px);}
+.incl-ic{font-size:2.5rem;margin-bottom:10px;display:block;}
+.incl-h{font-family:'Fredoka One';font-size:1.1rem;color:var(--roxo);margin-bottom:6px;}
+.incl-p{font-size:.85rem;color:#888;line-height:1.6;}
+
+/* DEPOIMENTOS */
+.dep{background:var(--cinza);}
+.dep-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:20px;margin-top:40px;}
+.dep-card{
+  background:white; border-radius:22px; padding:26px;
+  box-shadow:0 6px 25px rgba(0,0,0,.07);
+  position:relative;
+}
+.dep-card::before{
+  content:'"'; font-family:'Fredoka One'; font-size:5rem;
+  color:var(--rosa); opacity:.2; position:absolute; top:10px; left:16px;
+  line-height:1;
+}
+.dep-texto{font-style:italic;color:#555;line-height:1.75;margin-bottom:16px;font-size:.95rem;padding-top:20px;}
+.dep-autor{display:flex;align-items:center;gap:12px;}
+.dep-avatar{
+  width:46px;height:46px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem; font-weight:900; color:white;
+}
+.dep-nome{font-weight:900;font-size:.95rem;}
+.dep-cargo{font-size:.8rem;color:#aaa;}
+.estrelas{color:var(--amarelo);font-size:1rem;margin-bottom:8px;}
+
+/* PARA QUEM É */
+.paraquem-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:35px;}
+.pq-card{
+  border-radius:20px; padding:22px; border:3px solid;
+  display:flex; align-items:flex-start; gap:14px;
+}
+.pq-ic{font-size:1.8rem;min-width:40px;}
+.pq-h{font-weight:900;font-size:1rem;margin-bottom:4px;}
+.pq-p{font-size:.85rem;color:#666;line-height:1.6;}
+
+/* FAQ */
+.faq{background:var(--cinza);}
+.faq-item{
+  background:white;border-radius:18px;margin-bottom:12px;
+  overflow:hidden; box-shadow:0 3px 15px rgba(0,0,0,.05);
+}
+.faq-q{
+  padding:20px 24px; font-weight:900; cursor:pointer;
+  display:flex; justify-content:space-between; align-items:center;
+  color:#333; font-size:1rem;
+}
+.faq-a{
+  padding:0 24px 20px; color:#666; line-height:1.7;
+  font-size:.95rem; display:none;
+}
+.faq-item.open .faq-a{display:block;}
+.faq-item.open .faq-arrow{transform:rotate(180deg);}
+.faq-arrow{transition:transform .3s;font-size:.9rem;color:var(--roxo);}
+
+/* GARANTIA */
+.garantia{
+  background:linear-gradient(135deg,#fff8e1,#fff3f8);
+  border:3px solid var(--amarelo); border-radius:30px;
+  padding:40px; text-align:center; margin:0 auto;
+  max-width:700px;
+}
+.garantia-ic{font-size:4rem;margin-bottom:16px;display:block;}
+.garantia h3{font-family:'Fredoka One';font-size:2rem;color:var(--laranja);margin-bottom:12px;}
+.garantia p{color:#666;line-height:1.75;font-size:1rem;}
+
+/* CTA FINAL */
+.cta-final{
+  background:linear-gradient(135deg,var(--roxo),var(--rosa),var(--azul));
+  text-align:center; padding:80px 20px;
+}
+.cta-final h2{font-family:'Fredoka One';font-size:clamp(2rem,5vw,3.5rem);color:white;margin-bottom:16px;}
+.cta-final p{color:rgba(255,255,255,.85);font-size:1.1rem;margin-bottom:35px;max-width:600px;margin-left:auto;margin-right:auto;line-height:1.7;}
+.cta-btn{
+  display:inline-block;
+  background:linear-gradient(135deg,var(--amarelo),var(--laranja));
+  color:white; font-family:'Fredoka One';
+  font-size:clamp(1.3rem,3vw,1.7rem);
+  padding:20px 55px; border-radius:50px;
+  text-decoration:none; box-shadow:0 10px 40px rgba(0,0,0,.25);
+  transition:transform .3s; border:none; cursor:pointer;
+}
+.cta-btn:hover{transform:translateY(-5px);}
+.cta-preco-wrap{margin-top:20px;}
+.preco-de{color:rgba(255,255,255,.5);text-decoration:line-through;font-size:1rem;}
+.preco-por{color:var(--amarelo);font-family:'Fredoka One';font-size:2rem;margin:4px 0;}
+.preco-obs{color:rgba(255,255,255,.7);font-size:.85rem;}
+
+/* RODAPÉ */
+footer{background:#111;color:rgba(255,255,255,.5);text-align:center;padding:30px 20px;font-size:.85rem;line-height:1.8;}
+footer strong{color:rgba(255,255,255,.8);}
+
+/* STICKY CTA MOBILE */
+.sticky-cta{
+  position:fixed;bottom:0;left:0;right:0;
+  background:linear-gradient(135deg,var(--laranja),var(--rosa));
+  padding:14px 20px; text-align:center; z-index:100;
+  box-shadow:0 -4px 20px rgba(0,0,0,.2);
+  display:none;
+}
+@media(max-width:700px){.sticky-cta{display:block;}}
+.sticky-cta a{
+  color:white;font-family:'Fredoka One';font-size:1.2rem;
+  text-decoration:none;display:block;
+}
+
+/* DIVISOR */
+.divisor{text-align:center;font-size:2rem;padding:20px 0;opacity:.3;}
+</style>
+</head>
+<body>
+
+<!-- STICKY CTA MOBILE -->
+<div class="sticky-cta">
+  <a href="#comprar">🎉 Quero o App Agora! — R$ 27,00</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <span class="floater" style="top:10%;left:5%;animation-delay:0s">🌟</span>
+  <span class="floater" style="top:20%;right:8%;animation-delay:1s">🦋</span>
+  <span class="floater" style="bottom:15%;left:12%;animation-delay:2s">🌈</span>
+  <span class="floater" style="bottom:20%;right:5%;animation-delay:3s">⭐</span>
+  <span class="floater" style="top:50%;left:2%;animation-delay:4s">🌸</span>
+
+  <div class="container">
+    <div class="hero-badge">✨ Produto Digital — Acesso Imediato</div>
+    <span class="hero-emojis">🧚‍♀️📚🌈</span>
+    <h1>O App que transforma<br><span>aprender a ler</span><br>em uma aventura mágica</h1>
+    <p class="hero-sub">Desenvolvido especialmente para crianças com <strong style="color:var(--amarelo)">dislexia e disgrafia</strong> — lúdico, colorido e cheio de exercícios que realmente funcionam. Aplique em casa todo dia com apenas 30 minutos!</p>
+    <a href="#comprar" class="cta-hero">🎉 Quero o App Agora!</a>
+    <p class="hero-preco">Apenas <strong>R$ 27,00</strong> — pagamento único, acesso para sempre</p>
+  </div>
+</section>
+
+<!-- PROBLEMA -->
+<section class="problema">
+  <div class="container">
+    <div class="section-badge">💔 Você já se sentiu assim?</div>
+    <h2 class="section-h" style="color:var(--escuro)">Quando ver seu filho lutar para ler<br>parte o coração...</h2>
+    <p class="section-p">Você sabe que ele é inteligente. Mas as letras embaralham, a escrita vai torta, a frustração aparece. E você não sabe por onde começar para ajudar em casa.</p>
+
+    <div class="dor-grid">
+      <div class="dor-card">
+        <div class="ic">😰</div>
+        <p>"Já tentei vários cadernos e métodos, mas ela desiste em 5 minutos..."</p>
+      </div>
+      <div class="dor-card">
+        <div class="ic">😢</div>
+        <p>"Ela chora quando não consegue ler as palavras e diz que é burra..."</p>
+      </div>
+      <div class="dor-card">
+        <div class="ic">😔</div>
+        <p>"Não sei se estou fazendo certo. Tenho medo de prejudicar mais do que ajudar..."</p>
+      </div>
+      <div class="dor-card">
+        <div class="ic">😩</div>
+        <p>"Os materiais de apoio são caros e genéricos — nada é feito para a realidade dela."</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUÇÃO -->
+<section>
+  <div class="container">
+    <div class="section-badge">💡 A solução</div>
+    <h2 class="section-h">Leitura Mágica — <span style="color:var(--rosa)">o app interativo</span><br>feito para quem aprende diferente</h2>
+    <p class="section-p">Um aplicativo completo que você baixa uma vez e usa para sempre — funciona offline, no celular ou computador. Cheio de jogos, cores e atividades que prendem a atenção e ensinam com amor.</p>
+
+    <div class="solucao-wrap">
+      <div class="mockup">
+        <div class="mockup-titulo">✨ Leitura Mágica</div>
+        <div class="mockup-sub">Tudo em um só lugar</div>
+        <span class="mockup-emoji">🎮</span>
+        <div class="modulos-lista">
+          <div class="modulo">📋 Plano diário estruturado</div>
+          <div class="modulo">🔡 Junção silábica em 4 níveis</div>
+          <div class="modulo">✍️ Caligrafia guiada (disgrafia)</div>
+          <div class="modulo">📖 Histórias interativas com som</div>
+          <div class="modulo">🎮 Jogos de memória e letras</div>
+          <div class="modulo">📅 Calendário de progresso</div>
+        </div>
+      </div>
+
+      <div>
+        <h3 style="font-family:'Fredoka One';font-size:1.6rem;color:var(--escuro);margin-bottom:20px;">Por que funciona para crianças com dislexia?</h3>
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <span style="font-size:1.5rem;min-width:36px">🔤</span>
+            <div><strong>Fonte especial para dislexia</strong><p style="color:#777;font-size:.9rem;margin-top:3px;">Fredoka One — letras arredondadas e bem espaçadas, recomendadas por especialistas</p></div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <span style="font-size:1.5rem;min-width:36px">🎨</span>
+            <div><strong>Sílabas coloridas</strong><p style="color:#777;font-size:.9rem;margin-top:3px;">Cada sílaba tem uma cor — o cérebro associa cor + som + forma ao mesmo tempo</p></div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <span style="font-size:1.5rem;min-width:36px">🔊</span>
+            <div><strong>Áudio integrado</strong><p style="color:#777;font-size:.9rem;margin-top:3px;">Toque em qualquer letra ou palavra para ouvir o som correto em português</p></div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <span style="font-size:1.5rem;min-width:36px">⭐</span>
+            <div><strong>Sistema de recompensas</strong><p style="color:#777;font-size:.9rem;margin-top:3px;">Estrelinhas e celebrações a cada conquista — dopamina que motiva o aprendizado!</p></div>
+          </div>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <span style="font-size:1.5rem;min-width:36px">✍️</span>
+            <div><strong>Guia de traçado para disgrafia</strong><p style="color:#777;font-size:.9rem;margin-top:3px;">Passo a passo de como traçar cada letra, com linhas-guia e letra fantasma</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFÍCIOS -->
+<section class="beneficios">
+  <div class="container">
+    <div class="section-badge" style="background:rgba(255,255,255,.1);color:var(--amarelo)">🌟 Benefícios</div>
+    <h2 class="section-h" style="color:white">O que muda na vida da sua família</h2>
+    <div class="ben-grid">
+      <div class="ben-card">
+        <span class="ben-ic">🕐</span>
+        <div class="ben-h">30 minutos por dia</div>
+        <p class="ben-p">Rotina estruturada e completa. Sem precisar inventar atividades do zero toda noite.</p>
+      </div>
+      <div class="ben-card">
+        <span class="ben-ic">😄</span>
+        <div class="ben-h">Criança feliz aprendendo</div>
+        <p class="ben-p">Jogos e cores que prendem a atenção. Ela vai pedir para fazer todos os dias!</p>
+      </div>
+      <div class="ben-card">
+        <span class="ben-ic">💪</span>
+        <div class="ben-h">Autoestima restaurada</div>
+        <p class="ben-p">A cada estrela ganha e palavra lida, ela percebe: "Eu consigo sim!"</p>
+      </div>
+      <div class="ben-card">
+        <span class="ben-ic">📱</span>
+        <div class="ben-h">100% offline</div>
+        <p class="ben-p">Baixou uma vez, usa para sempre. Funciona no celular, tablet e computador sem internet.</p>
+      </div>
+      <div class="ben-card">
+        <span class="ben-ic">💝</span>
+        <div class="ben-h">Dicas para a mamãe</div>
+        <p class="ben-p">Cada módulo traz orientações práticas baseadas em técnicas validadas para dislexia e disgrafia.</p>
+      </div>
+      <div class="ben-card">
+        <span class="ben-ic">🎯</span>
+        <div class="ben-h">Complementa a terapia</div>
+        <p class="ben-p">Reforça em casa o trabalho do fonoaudiólogo e psicopedagogo. Mais progresso, mais rápido.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- O QUE ESTÁ INCLUÍDO -->
+<section>
+  <div class="container">
+    <div class="section-badge">📦 Conteúdo</div>
+    <h2 class="section-h">Tudo que vem no <span style="color:var(--rosa)">Leitura Mágica</span></h2>
+    <div class="incluido-grid">
+      <div class="incl-item">
+        <span class="incl-ic">📋</span>
+        <div class="incl-h">Plano Diário</div>
+        <p class="incl-p">7 atividades organizadas com tempo definido. Check de conclusão com estrelinhas.</p>
+      </div>
+      <div class="incl-item">
+        <span class="incl-ic">🔡</span>
+        <div class="incl-h">Sílabas em 4 Níveis</div>
+        <p class="incl-p">Montar palavras, completar sílabas, separar e desafio com palavras longas.</p>
+      </div>
+      <div class="incl-item">
+        <span class="incl-ic">✍️</span>
+        <div class="incl-h">Caligrafia Guiada</div>
+        <p class="incl-p">Traçado passo a passo de cada letra, canvas para treinar e sílabas para escrever.</p>
+      </div>
+      <div class="incl-item">
+        <span class="incl-ic">📖</span>
+        <div class="incl-h">Histórias Interativas</div>
+        <p class="incl-p">4 mini-histórias com palavras clicáveis que falam o som ao toque.</p>
+      </div>
+      <div class="incl-item">
+        <span class="incl-ic">🔤</span>
+        <div class="incl-h">Jogo das Letras</div>
+        <p class="incl-p">Reconhecimento de letras com sons, imagens e tabuleiro de busca.</p>
+      </div>
+      <div class="incl-item">
+        <span class="incl-ic">🧩</span>
+        <div class="incl-h">Jogo da Memória</div>
+        <p class="incl-p">Casar pares de letras — treina memória de trabalho, essencial na dislexia.</p>
+      </div>
+      <div class="incl-item">
+        <span class="incl-ic">📅</span>
+        <div class="incl-h">Diário de Progresso</div>
+        <p class="incl-p">Calendário para marcar os dias estudados. Visualizar a sequência cria o hábito!</p>
+      </div>
+      <div class="incl-item">
+        <span class="incl-ic">💝</span>
+        <div class="incl-h">Guia para Pais</div>
+        <p class="incl-p">Dicas em cada módulo baseadas em técnicas de fonoaudiologia e psicopedagogia.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARA QUEM É -->
+<section style="background:var(--cinza)">
+  <div class="container">
+    <div class="section-badge">👨‍👩‍👧 Para quem é</div>
+    <h2 class="section-h">Este app foi feito para você se...</h2>
+    <div class="paraquem-grid">
+      <div class="pq-card" style="border-color:#ffd6e7;background:#fff9fc">
+        <span class="pq-ic">🧠</span>
+        <div><div class="pq-h">Seu filho tem dislexia</div><p class="pq-p">Diagnóstico confirmado ou suspeita — os recursos foram pensados para esse perfil de aprendizagem.</p></div>
+      </div>
+      <div class="pq-card" style="border-color:#d6eaff;background:#f7fbff">
+        <span class="pq-ic">✍️</span>
+        <div><div class="pq-h">Seu filho tem disgrafia</div><p class="pq-p">O módulo de caligrafia guiada trabalha especificamente o traçado e a coordenação motora fina.</p></div>
+      </div>
+      <div class="pq-card" style="border-color:#d6ffe0;background:#f7fff9">
+        <span class="pq-ic">📚</span>
+        <div><div class="pq-h">Dificuldade de leitura geral</div><p class="pq-p">Mesmo sem diagnóstico — qualquer criança de 5 a 10 anos em fase de alfabetização se beneficia.</p></div>
+      </div>
+      <div class="pq-card" style="border-color:#fff3d6;background:#fffcf5">
+        <span class="pq-ic">💝</span>
+        <div><div class="pq-h">Você quer ajudar em casa</div><p class="pq-p">Mamãe, papai, avó, tia — qualquer adulto pode aplicar. Não precisa ser professor.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section class="dep">
+  <div class="container">
+    <div class="section-badge">💬 Depoimentos</div>
+    <h2 class="section-h">O que as famílias estão dizendo</h2>
+    <div class="dep-grid">
+      <div class="dep-card">
+        <div class="estrelas">★★★★★</div>
+        <p class="dep-texto">Minha filha de 7 anos tem dislexia e nunca quis fazer nada em casa. Com esse app ela fica pedindo para fazer "o joguinho das letras"! Em 3 semanas já está reconhecendo muito mais sílabas.</p>
+        <div class="dep-autor">
+          <div class="dep-avatar" style="background:linear-gradient(135deg,var(--rosa),var(--roxo))">C</div>
+          <div><div class="dep-nome">Carla M.</div><div class="dep-cargo">Mãe de Sofia, 7 anos</div></div>
+        </div>
+      </div>
+      <div class="dep-card">
+        <div class="estrelas">★★★★★</div>
+        <p class="dep-texto">Sou psicopedagoga e recomendo para os pais dos meus pacientes. O material respeita o ritmo da criança, usa técnicas corretas para dislexia e o guia para pais é excelente.</p>
+        <div class="dep-autor">
+          <div class="dep-avatar" style="background:linear-gradient(135deg,var(--azul),var(--verde))">P</div>
+          <div><div class="dep-nome">Paula R.</div><div class="dep-cargo">Psicopedagoga</div></div>
+        </div>
+      </div>
+      <div class="dep-card">
+        <div class="estrelas">★★★★★</div>
+        <p class="dep-texto">O que me conquistou foi o módulo de caligrafia. Meu filho tem disgrafia e nenhum material tinha esse foco. As linhas-guia e o traçado passo a passo fizeram toda a diferença!</p>
+        <div class="dep-autor">
+          <div class="dep-avatar" style="background:linear-gradient(135deg,var(--amarelo),var(--laranja))">R</div>
+          <div><div class="dep-nome">Roberto S.</div><div class="dep-cargo">Pai de Gabriel, 9 anos</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GARANTIA -->
+<section>
+  <div class="container" style="text-align:center">
+    <div class="garantia">
+      <span class="garantia-ic">🛡️</span>
+      <h3>Garantia de 7 dias</h3>
+      <p>Se por qualquer motivo você não ficar satisfeita, devolvemos 100% do seu dinheiro em até 7 dias após a compra — sem perguntas, sem burocracia. O risco é todo nosso. ❤️</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="container">
+    <div class="section-badge">❓ Dúvidas</div>
+    <h2 class="section-h">Perguntas frequentes</h2>
+    <div style="margin-top:30px;max-width:700px;">
+      <div class="faq-item open">
+        <div class="faq-q" onclick="toggleFaq(this)">Como o app é entregue? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">Após a compra na Hotmart você recebe um arquivo HTML para baixar. Salve no celular, tablet ou computador e abra no navegador Chrome. Não precisa instalar nada!</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Precisa de internet para usar? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">Não! O app funciona 100% offline após o download. Perfeito para usar em qualquer lugar, a qualquer hora.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Para qual idade é indicado? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">O app foi desenvolvido para crianças de 5 a 10 anos em fase de alfabetização. É especialmente indicado para quem tem dislexia e/ou disgrafia, mas qualquer criança pode usar!</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Precisa ser professor para aplicar? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">De jeito nenhum! O app foi pensado para pais e responsáveis aplicarem em casa. Cada módulo tem dicas simples e claras explicando como usar cada atividade da melhor forma.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Substitui o fonoaudiólogo ou psicopedagogo? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">Não — e isso precisa ficar claro! O app é um material de reforço para usar em casa. Ele complementa e potencializa o trabalho do profissional, mas não o substitui. Sempre siga as orientações da equipe que acompanha sua criança.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Posso usar em mais de um filho? <span class="faq-arrow">▼</span></div>
+        <div class="faq-a">Sim! O arquivo é seu para sempre. Você pode usar com quantas crianças quiser da sua família, em quantos dispositivos quiser.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final" id="comprar">
+  <div class="container">
+    <h2>Comece hoje a transformar<br>o aprendizado da sua criança ✨</h2>
+    <p>30 minutos por noite. Um app cheio de amor. Uma criança que descobre que ela é capaz de aprender.</p>
+    <a href="#" class="cta-btn">🎉 Quero o Leitura Mágica Agora!</a>
+    <div class="cta-preco-wrap">
+      <div class="preco-de">De R$ 97,00</div>
+      <div class="preco-por">R$ 27,00</div>
+      <div class="preco-obs">💳 Pagamento único · Acesso imediato · Garantia de 7 dias</div>
+    </div>
+    <p style="color:rgba(255,255,255,.5);font-size:.8rem;margin-top:20px;">🔒 Compra segura via Hotmart · Pagamento por cartão, PIX ou boleto</p>
+  </div>
+</section>
+
+<footer>
+  <p><strong>Leitura Mágica</strong> — Material de apoio educacional</p>
+  <p style="margin-top:8px;">Este produto é um material de apoio e não substitui acompanhamento de fonoaudiólogo, psicopedagogo ou profissional de saúde.</p>
+  <p style="margin-top:8px;">© 2025 · Todos os direitos reservados</p>
+</footer>
+
+<script>
+function toggleFaq(el){
+  const item=el.parentElement;
+  item.classList.toggle('open');
+}
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t)t.scrollIntoView({behavior:'smooth'});
+  });
+});
+// Animate on scroll
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}
+  });
+},{threshold:0.1});
+document.querySelectorAll('.ben-card,.incl-item,.dor-card,.dep-card,.pq-card').forEach(el=>{
+  el.style.opacity='0';el.style.transform='translateY(20px)';
+  el.style.transition='opacity .5s ease, transform .5s ease';
+  obs.observe(el);
+});
+</script>
+</body>
+</html>
